@@ -2,6 +2,7 @@ import sys
 import pygame
 from stone import Stone
 from fish import Fish
+from time import sleep
 
 def check_events(screen, settings, cat, stones):
 	"""Respond to keypresses and mouse events"""
@@ -89,10 +90,13 @@ def get_number_rows(settings, cat_height, fish_height):
 	available_space_y = settings.screen_height - cat_height - 3 * fish_height
 	return int(available_space_y / (2 * fish_height))
 
-def update_fishes(settings, fishes):
+def update_fishes(screen, settings, stats, fishes, stones, cat):
 	"""Check if the pool is at an edge and then update the positions of all fishes in the pool"""
 	check_pool_edges(settings, fishes)
 	fishes.update()
+	if pygame.sprite.spritecollideany(cat, fishes):
+		cat_hit(screen, settings, stats, fishes, stones, cat)
+	check_fish_bottom(screen, settings, stats, fishes, stones, cat)
 
 def check_pool_edges(settings, fishes):
 	"""Respond corespondingly if any fishes have reached an edge."""
@@ -106,4 +110,28 @@ def change_pool_direction(settings, fishes):
 	for fish in fishes.sprites():
 		fish.rect.y += settings.pool_drop_speed
 	settings.pool_direction *= -1
+
+def cat_hit(screen, settings, stats, fishes, stones, cat):
+	if stats.cats_left > 0:
+		stats.cats_left -= 1
+	else:
+		stats.game_active = False
+
+	fishes.empty()
+	stones.empty()
+
+	create_pool(screen, settings, fishes, cat)
+	cat.center_cat()
+
+	sleep(0.5)
+
+def check_fish_bottom(screen, settings, stats, fishes, stones, cat):
+	screen_rect = screen.get_rect()
+
+	for fish in fishes.sprites():
+		if fish.rect.bottom >= screen_rect.bottom:
+			cat_hit(screen, settings, stats, fishes, stones, cat)
+			break
+
+
 

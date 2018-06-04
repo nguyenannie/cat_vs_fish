@@ -30,3 +30,7 @@ class Cat():
 		if self.moving_left and self.rect.left > 0:
 			self.center -= self.settings.cat_speed_factor
 		self.rect.centerx = self.center
+
+	def center_cat(self):
+		"""Center the ship on the screen"""
+		self.center = self.screen_rect.centerx

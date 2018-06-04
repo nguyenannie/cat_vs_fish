@@ -9,12 +9,14 @@ class Settings():
 
 		self.cat_speed_factor = 1.5
 
+		self.cats_limit = 3
+
 		self.stone_speed_factor = 1
 		self.stone_side = 15
 		self.stone_color = (0, 0, 0)
 
 		self.stones_allowed = 3
 
-		self.fish_speed_factor = 1
+		self.fish_speed_factor = 10
 		self.pool_drop_speed = 10
 		self.pool_direction = 1
