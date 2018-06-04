@@ -1,8 +1,9 @@
 import pygame
 
 class Cat():
-	"""Initialize the cat and set its starting position"""
+	"""A class to manage the cat"""
 	def __init__(self, screen, settings):
+		"""Initialize the cat and set its starting position"""
 		self.screen = screen
 		self.settings = settings
 
