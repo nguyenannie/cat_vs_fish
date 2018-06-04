@@ -3,7 +3,7 @@ class GameStat(object):
 	def __init__(self, settings):
 		"""Initialize statistics"""
 		self.settings = settings
-		self.game_active = True
+		self.game_active = False
 		self.reset_stats()
 	
 	def reset_stats(self):
