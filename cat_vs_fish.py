@@ -19,7 +19,7 @@ def run_game():
 
 	while True:
 		gm.check_events(screen, settings, cat, stones)
-		gm.update_stones(stones)
+		gm.update_stones(screen, settings, stones, fishes, cat)
 		gm.update_fishes(settings, fishes)
 		cat.update()
 		gm.update_screen(screen, settings, cat, stones, fishes)

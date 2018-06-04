@@ -38,12 +38,20 @@ def update_screen(screen, settings, cat, stones, fishes):
 		stone.draw_stone()
 	pygame.display.flip()
 
-def update_stones(stones):
+def update_stones(screen, settings, stones, fishes, cat):
 	"""Update position of stones and get rid of old stones"""
 	stones.update()
 	for stone in stones.copy():
 		if stone.rect.bottom <= 0:
 			stones.remove(stone)
+	check_stone_fish_collisions(screen, settings, fishes, stones, cat)
+
+def check_stone_fish_collisions(screen, settings, fishes, stones, cat):
+	"""Respond to stone-fish collisions."""
+	colissions = pygame.sprite.groupcollide(stones, fishes, True, True)
+	if len(fishes) == 0:
+		stones.empty()
+		create_pool(screen, settings, fishes, cat)
 
 def throw_stone(screen, settings, cat, stones):
 	"""Throw a stone if limit is not reached yet"""
