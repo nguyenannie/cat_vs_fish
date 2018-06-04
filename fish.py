@@ -20,4 +20,14 @@ class Fish(Sprite):
 	def blitme(self):
 		"""Draw the fish at its current position"""
 		self.screen.blit(self.image, self.rect)
+
+	def update(self):
+		self.x += self.settings.fish_speed_factor * self.settings.pool_direction
+		self.rect.x = self.x
+
+	def check_edges(self):
+		screen_rect = self.screen.get_rect()
+		if self.rect.right >= screen_rect.right or self.rect.left <= 0:
+			return True
+
 		

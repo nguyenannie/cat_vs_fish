@@ -80,3 +80,22 @@ def get_number_rows(settings, cat_height, fish_height):
 	"""Determine the number of rows of fishes that fit on the screen"""
 	available_space_y = settings.screen_height - cat_height - 3 * fish_height
 	return int(available_space_y / (2 * fish_height))
+
+def update_fishes(settings, fishes):
+	"""Check if the pool is at an edge and then update the positions of all fishes in the pool"""
+	check_pool_edges(settings, fishes)
+	fishes.update()
+
+def check_pool_edges(settings, fishes):
+	"""Respond corespondingly if any fishes have reached an edge."""
+	for fish in fishes.sprites():
+		if fish.check_edges():
+			change_pool_direction(settings, fishes)
+			break
+
+def change_pool_direction(settings, fishes):
+	"""Drop the entire pool and change the pool's direction"""
+	for fish in fishes.sprites():
+		fish.rect.y += settings.pool_drop_speed
+	settings.pool_direction *= -1
+

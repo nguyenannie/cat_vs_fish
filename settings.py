@@ -14,3 +14,7 @@ class Settings():
 		self.stone_color = (0, 0, 0)
 
 		self.stones_allowed = 3
+
+		self.fish_speed_factor = 1
+		self.pool_drop_speed = 10
+		self.pool_direction = 1
