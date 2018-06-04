@@ -4,6 +4,7 @@ from settings import Settings
 from cat import Cat
 import game_methods as gm
 from pygame.sprite import Group
+from fish import Fish
 
 def run_game():
 	pygame.init()
@@ -13,11 +14,13 @@ def run_game():
 
 	cat = Cat(screen, settings)
 	stones = Group()
+	fishes = Group()
+	gm.create_pool(screen, settings, fishes, cat)
 
 	while True:
 		gm.check_events(screen, settings, cat, stones)
 		gm.update_stones(stones)
 		cat.update()
-		gm.update_screen(screen, settings, cat, stones)
+		gm.update_screen(screen, settings, cat, stones, fishes)
 
 run_game()
