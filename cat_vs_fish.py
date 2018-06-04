@@ -2,6 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from cat import Cat
+import game_methods as gm
 
 def run_game():
 	pygame.init()
@@ -11,14 +12,8 @@ def run_game():
 
 	cat = Cat(screen)
 
-	screen.fill(settings.background_color)
-	cat.blitme()
-
 	while True:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				sys.exit()
-
-		pygame.display.flip()
+		gm.check_events(cat)
+		gm.update_screen(screen, settings, cat)
 
 run_game()
