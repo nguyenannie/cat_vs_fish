@@ -48,28 +48,34 @@ def check_keydown_event(screen, settings, event, cat, stones):
 	elif event.key == pygame.K_SPACE:
 		throw_stone(screen, settings, cat, stones)
 
-def update_screen(screen, settings, cat, stones, fishes, play_button, stats):
+def update_screen(screen, settings, cat, stones, fishes, play_button, stats, scoreboard):
 	"""Update images on the screen and flip to the new screen."""
 	screen.fill(settings.background_color)
 	cat.blitme()
 	fishes.draw(screen)
+	scoreboard.show_score()
 	for stone in stones.sprites():
 		stone.draw_stone()
 	if not stats.game_active:
 		play_button.draw_button()
 	pygame.display.flip()
 
-def update_stones(screen, settings, stones, fishes, cat):
+def update_stones(screen, settings, stones, fishes, cat, stats, scoreboard):
 	"""Update position of stones and get rid of old stones"""
 	stones.update()
 	for stone in stones.copy():
 		if stone.rect.bottom <= 0:
 			stones.remove(stone)
-	check_stone_fish_collisions(screen, settings, fishes, stones, cat)
+	check_stone_fish_collisions(screen, settings, fishes, stones, cat, stats, scoreboard)
 
-def check_stone_fish_collisions(screen, settings, fishes, stones, cat):
+def check_stone_fish_collisions(screen, settings, fishes, stones, cat, stats, scoreboard):
 	"""Respond to stone-fish collisions."""
 	colissions = pygame.sprite.groupcollide(stones, fishes, True, True)
+	if colissions:
+		for fishes in colissions.values():
+			stats.score += settings.fish_point * len(fishes)
+			scoreboard.prep_score()
+		check_high_score(stats, scoreboard)
 	if len(fishes) == 0:
 		stones.empty()
 		create_pool(screen, settings, fishes, cat)
@@ -156,6 +162,12 @@ def check_fish_bottom(screen, settings, stats, fishes, stones, cat):
 		if fish.rect.bottom >= screen_rect.bottom:
 			cat_hit(screen, settings, stats, fishes, stones, cat)
 			break
+
+def check_high_score(stats, scoreboard):
+	"""Check to see if there's a new high score"""
+	if stats.score > stats.high_score:
+		stats.high_score = stats.score
+		scoreboard.prep_high_score()
 
 
 

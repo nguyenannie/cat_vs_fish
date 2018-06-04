@@ -4,6 +4,7 @@ class GameStat(object):
 		"""Initialize statistics"""
 		self.settings = settings
 		self.game_active = False
+		self.high_score = 0
 		self.reset_stats()
 	
 	def reset_stats(self):
