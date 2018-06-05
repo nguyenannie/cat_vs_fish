@@ -1,4 +1,6 @@
 import pygame.font
+from pygame.sprite import Group
+from cat import Cat
 
 class Scoreboard(object):
 	"""A class to report scoring information"""
@@ -14,6 +16,8 @@ class Scoreboard(object):
 
 		self.prep_score()
 		self.prep_high_score()
+		self.prep_level()
+		self.prep_cats()
 
 	def prep_score(self):
 		"""Turn score into a rendered image"""
@@ -34,7 +38,25 @@ class Scoreboard(object):
 		self.high_score_rect.right = self.screen_rect.centerx
 		self.high_score_rect.top = self.score_rect.top
 
+	def prep_level(self):
+		"""Turn the level into a rendered image"""
+		self.level_image = self.font.render(str(self.stats.level), True, self.text_color, self.settings.background_color)
+		self.level_rect = self.level_image.get_rect()
+		self.level_rect.right = self.score_rect.right
+		self.level_rect.top = self.score_rect.bottom + 10
+
+	def prep_cats(self):
+		self.cats = Group()
+		for cat_number in range(self.stats.cats_left):
+			cat = Cat(self.screen, self.settings)
+			cat.rect.x = 10 + cat_number * cat.rect.width
+			cat.rect.y = 10
+			self.cats.add(cat)
+
 	def show_score(self):
-		"""Draw score to the screen"""
+		"""Draw score and cat to the screen"""
 		self.screen.blit(self.score_image, self.score_rect)
 		self.screen.blit(self.high_score_image, self.high_score_rect)
+		self.screen.blit(self.level_image, self.level_rect)
+		self.cats.draw(self.screen)
+

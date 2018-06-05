@@ -24,11 +24,11 @@ def run_game():
 	gm.create_pool(screen, settings, fishes, cat)
 
 	while True:
-		gm.check_events(screen, settings, cat, stones, game_stats, play_button, fishes)
+		gm.check_events(screen, settings, cat, stones, game_stats, play_button, fishes, scoreboard)
 		if game_stats.game_active:
 			cat.update()
 			gm.update_stones(screen, settings, stones, fishes, cat, game_stats, scoreboard)
-			gm.update_fishes(screen, settings, game_stats, fishes, stones, cat)
+			gm.update_fishes(screen, settings, game_stats, fishes, stones, cat, scoreboard)
 		gm.update_screen(screen, settings, cat, stones, fishes, play_button, game_stats, scoreboard)
 
 run_game()
