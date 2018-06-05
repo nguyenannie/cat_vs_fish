@@ -15,6 +15,8 @@ class Fish(Sprite):
 		self.rect.x = self.rect.width
 		self.rect.y = self.rect.height
 
+		self.drop_down_mode = False
+
 		self.x = float(self.rect.x)
 
 	def blitme(self):
@@ -22,12 +24,18 @@ class Fish(Sprite):
 		self.screen.blit(self.image, self.rect)
 
 	def update(self):
-		self.x += self.settings.fish_speed_factor * self.settings.pool_direction
-		self.rect.x = self.x
+		if self.drop_down_mode:
+			self.rect.y += 20
+		else:
+			self.x += self.settings.fish_speed_factor * self.settings.pool_direction
+			self.rect.x = self.x
 
 	def check_edges(self):
 		screen_rect = self.screen.get_rect()
 		if self.rect.right >= screen_rect.right or self.rect.left <= 0:
 			return True
+
+	def drop_down(self):
+		self.rect.y += 20
 
 		

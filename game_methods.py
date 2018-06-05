@@ -75,12 +75,11 @@ def update_stones(screen, settings, stones, fishes, cat, stats, scoreboard):
 
 def check_stone_fish_collisions(screen, settings, fishes, stones, cat, stats, scoreboard):
 	"""Respond to stone-fish collisions."""
-	colissions = pygame.sprite.groupcollide(stones, fishes, True, True)
+	colissions = pygame.sprite.groupcollide(stones, fishes, True, False)
 	if colissions:
 		for fishes in colissions.values():
-			stats.score += settings.fish_point * len(fishes)
-			scoreboard.prep_score()
-		check_high_score(stats, scoreboard)
+			for fish in fishes:
+					fish.drop_down_mode = True
 	if len(fishes) == 0:
 		stones.empty()
 		create_pool(screen, settings, fishes, cat)
@@ -128,8 +127,13 @@ def update_fishes(screen, settings, stats, fishes, stones, cat, scoreboard):
 	"""Check if the pool is at an edge and then update the positions of all fishes in the pool"""
 	check_pool_edges(settings, fishes)
 	fishes.update()
-	if pygame.sprite.spritecollideany(cat, fishes):
-		cat_hit(screen, settings, stats, fishes, stones, cat, scoreboard)
+	cat_fishes_colissions = pygame.sprite.spritecollide(cat, fishes, True)
+	if cat_fishes_colissions:
+		for fish in cat_fishes_colissions:
+			stats.score += settings.fish_point
+			scoreboard.prep_score()
+		check_high_score(stats, scoreboard)
+
 	check_fish_bottom(screen, settings, stats, fishes, stones, cat, scoreboard)
 
 def check_pool_edges(settings, fishes):
@@ -145,8 +149,8 @@ def change_pool_direction(settings, fishes):
 		fish.rect.y += settings.pool_drop_speed
 	settings.pool_direction *= -1
 
-def cat_hit(screen, settings, stats, fishes, stones, cat, scoreboard):
-	"""Respond to cat being hit by fish"""
+def lose_life(screen, settings, stats, fishes, stones, cat, scoreboard):
+	"""Respond to cat losing one life"""
 	if stats.cats_left > 0:
 		stats.cats_left -= 1
 		scoreboard.prep_cats()
@@ -154,10 +158,10 @@ def cat_hit(screen, settings, stats, fishes, stones, cat, scoreboard):
 		stats.game_active = False
 		pygame.mouse.set_visible(False)
 
-	fishes.empty()
+	# fishes.empty()
 	stones.empty()
 
-	create_pool(screen, settings, fishes, cat)
+	# create_pool(screen, settings, fishes, cat)
 	cat.center_cat()
 
 	sleep(0.5)
@@ -168,7 +172,7 @@ def check_fish_bottom(screen, settings, stats, fishes, stones, cat, scoreboard):
 
 	for fish in fishes.sprites():
 		if fish.rect.bottom >= screen_rect.bottom:
-			cat_hit(screen, settings, stats, fishes, stones, cat, scoreboard)
+			lose_life(screen, settings, stats, fishes, stones, cat, scoreboard)
 			break
 
 def check_high_score(stats, scoreboard):

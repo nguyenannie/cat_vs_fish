@@ -21,9 +21,9 @@ class Settings():
 		self.initialize_dynamic_settings()
 
 	def initialize_dynamic_settings(self):
-		self.cat_speed_factor = 1.5
-		self.stone_speed_factor = 1
-		self.fish_speed_factor = 5
+		self.cat_speed_factor = 5
+		self.stone_speed_factor = 5
+		self.fish_speed_factor = 2
 		self.pool_direction = 1
 		self.fish_point = 50
 
