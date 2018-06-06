@@ -21,6 +21,7 @@ def check_play_button(screen, settings, stats, fishes, stones, cat, play_button,
 	"""Start a new game when the player click play"""
 	play_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
 	if play_clicked and not stats.game_active:
+		pygame.mixer.Sound("sounds/play_button_click.wav").play()
 		settings.initialize_dynamic_settings()
 		stats.reset_stats()
 		pygame.mouse.set_visible(False)
@@ -79,17 +80,20 @@ def check_stone_fish_collisions(screen, settings, fishes, stones, cat, stats, sc
 	if colissions:
 		for fishes in colissions.values():
 			for fish in fishes:
+					pygame.mixer.Sound("sounds/hit.wav").play()
 					fish.drop_down_mode = True
 	if len(fishes) == 0:
 		stones.empty()
 		create_pool(screen, settings, fishes, cat)
 		settings.increase_speed()
+		pygame.mixer.Sound("sounds/level_up.wav").play()
 		stats.level += 1
 		scoreboard.prep_level()
 
 def throw_stone(screen, settings, cat, stones):
 	"""Throw a stone if limit is not reached yet"""
 	if len(stones) < settings.stones_allowed:
+			pygame.mixer.Sound("sounds/shoot.wav").play()
 			new_stone = Stone(screen, settings, cat)
 			stones.add(new_stone)
 
@@ -116,12 +120,12 @@ def create_fish(screen, settings, fishes, fish_number, row_number, cat):
 def get_number_fishes_x(settings, fish_width):
 	"""Determine the number of fishes that fit in a row"""
 	available_space_x = settings.screen_width - 2 * fish_width
-	return int(available_space_x / (2 * fish_width))
+	return int(available_space_x / (3 * fish_width))
 
 def get_number_rows(settings, cat_height, fish_height):
 	"""Determine the number of rows of fishes that fit on the screen"""
 	available_space_y = settings.screen_height - 2 * cat_height - 3 * fish_height
-	return int(available_space_y / (2 * fish_height))
+	return int(available_space_y / (3 * fish_height))
 
 def update_fishes(screen, settings, stats, fishes, stones, cat, scoreboard):
 	"""Check if the pool is at an edge and then update the positions of all fishes in the pool"""
@@ -130,6 +134,7 @@ def update_fishes(screen, settings, stats, fishes, stones, cat, scoreboard):
 	cat_fishes_colissions = pygame.sprite.spritecollide(cat, fishes, True)
 	if cat_fishes_colissions:
 		for fish in cat_fishes_colissions:
+			pygame.mixer.Sound("sounds/collect.wav").play()
 			stats.score += settings.fish_point
 			scoreboard.prep_score()
 		check_high_score(stats, scoreboard)
@@ -152,16 +157,18 @@ def change_pool_direction(settings, fishes):
 def lose_life(screen, settings, stats, fishes, stones, cat, scoreboard):
 	"""Respond to cat losing one life"""
 	if stats.cats_left > 0:
+		pygame.mixer.Sound("sounds/lose_life.wav").play()
 		stats.cats_left -= 1
 		scoreboard.prep_cats()
 	else:
+		pygame.mixer.Sound("sounds/game_over.wav").play()
 		stats.game_active = False
-		pygame.mouse.set_visible(False)
+		pygame.mouse.set_visible(True)
 
-	# fishes.empty()
+	fishes.empty()
 	stones.empty()
 
-	# create_pool(screen, settings, fishes, cat)
+	create_pool(screen, settings, fishes, cat)
 	cat.center_cat()
 
 	sleep(0.5)
@@ -169,7 +176,6 @@ def lose_life(screen, settings, stats, fishes, stones, cat, scoreboard):
 def check_fish_bottom(screen, settings, stats, fishes, stones, cat, scoreboard):
 	"""Check if any fishes have reached the bottom of the screen"""
 	screen_rect = screen.get_rect()
-
 	for fish in fishes.sprites():
 		if fish.rect.bottom >= screen_rect.bottom:
 			lose_life(screen, settings, stats, fishes, stones, cat, scoreboard)
@@ -180,6 +186,3 @@ def check_high_score(stats, scoreboard):
 	if stats.score > stats.high_score:
 		stats.high_score = stats.score
 		scoreboard.prep_high_score()
-
-
-

@@ -5,9 +5,9 @@ class GameStat(object):
 		self.settings = settings
 		self.game_active = False
 		self.high_score = 0
-		self.level = 1
 		self.reset_stats()
 	
 	def reset_stats(self):
 		self.score = 0
 		self.cats_left = self.settings.cats_limit
+		self.level = 1
